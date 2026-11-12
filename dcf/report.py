@@ -1,6 +1,7 @@
 """
 report.py
-Prints the results, then asks once whether to export them to Excel (nothing is saved otherwise).
+Prints the results, then asks once whether to export them (Excel workbook and a football field
+chart PNG; nothing is saved otherwise).
 """
 
 import math
@@ -103,3 +104,12 @@ def maybe_export(ctx, root):
         pd.DataFrame(grid, index=[f"{w:.2%}" for w in waccs], columns=[f"{g:.2%}" for g in gs]).to_excel(
             xw, sheet_name="Sensitivity")
     print(f"Exported: {path}")
+
+    # Football field chart (PNG). Adds comps bars if outputs/<TICKER>_comps.xlsx exists.
+    from football_field import make_chart
+    ticker = ctx["cfg"]["ticker"]
+    chart = make_chart(ctx, out_dir / f"{ticker}_football_field.png", out_dir / f"{ticker}_comps.xlsx")
+    if chart:
+        print(f"Exported: {chart}")
+        if not (out_dir / f"{ticker}_comps.xlsx").exists():
+            print(f"Tip: run uv run comps/comps.py {ticker} <peers> y first to add comps bars to the chart.")

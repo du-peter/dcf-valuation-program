@@ -4,6 +4,24 @@ Newest first. Each entry: what changed, why, and what it teaches.
 
 ---
 
+## 2026-11-11: football field chart on export
+
+**What changed:** answering y to the export prompt now also saves `outputs/<TICKER>_football_field.png`
+(code: `football_field.py`, called from `report.py`). Bars: DCF scenarios (bear to bull), DCF base case
+(Gordon vs exit multiple), DCF base sensitivity (WACC and g each +/-1%), and, if
+`outputs/<TICKER>_comps.xlsx` exists, one bar per comps peer group with its median marked. Vertical
+lines at the current price and the probability-weighted DCF value. The footer states the run dates,
+the data source of each part, and "Illustrative model output, not a recommendation."
+
+**Why:** the football field is the standard one-page summary of a banking valuation. It shows how wide
+each method's range is and where the price sits against all of them at once.
+
+**Learning point:** DCF and comps come from different sources (OpenBB vs yfinance) and can be run on
+different days. Showing them side by side on one chart is fine because neither feeds the other's
+calculation, but the chart labels each source and date so the reader knows.
+
+---
+
 ## 2026-11-11: comps and peer beta take any tickers; reviewed SNDK file restored
 
 **What changed:**

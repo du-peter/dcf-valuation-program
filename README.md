@@ -27,7 +27,7 @@ license is granted to copy, modify or redistribute it.
   profit, so growth only adds value when the return on new investment is above WACC.
 - Reverse DCF: solves for the long-run EBIT margin that today's share price implies.
 - Sensitivity table of value per share across WACC and terminal growth.
-- Optional export of the full output to Excel.
+- Optional export of the full output to Excel, plus a football field chart (PNG) that combines the DCF ranges with any saved comps run for the same ticker.
 
 **Comps (`comps/`)**
 - Pulls P/E (trailing and forward), EV/EBITDA, EV/Sales and P/B for a target and any peers.
@@ -158,6 +158,7 @@ dcf-valuation-program/
 │   ├── model.py           WACC, terminal values, enterprise value to value per share
 │   ├── scenarios.py       bear/base/bull, weighting, sensitivity, reverse DCF
 │   ├── report.py          printout and Excel export
+│   ├── football_field.py  football field chart (PNG) on export
 │   ├── peer_beta.py       peer beta helper
 │   ├── DECISIONS.md       design decisions and the reasoning behind them
 │   ├── companies/         one settings file per company
