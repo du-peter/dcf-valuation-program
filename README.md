@@ -140,9 +140,11 @@ These settings files are examples of the method. They are not investment recomme
 | `dcf/companies/nvda.toml` | Nvidia. Hand-reviewed scenarios anchored to company guidance and consensus, sources listed in the file. |
 | `dcf/companies/mu.toml` | Micron. Automatically built, not reviewed: shows what a first-run file looks like. |
 
-Sandisk run on Nov 11, 2026 (price $982.01, WACC 13.8%): bear $322, base $836, bull $1,904,
-probability-weighted $975. The reverse DCF showed the price implied a long-run EBIT margin of
-about 50%, against 35% in the base case.
+![SNDK football field, Nov 11 2026](docs/images/sndk_football_field.png)
+
+Sandisk, Nov 11, 2026 (WACC 13.8%): bear $322, base $836, bull $1,904, probability-weighted $975,
+against a price of $953 at the time of the chart. On an earlier run that day at $982, the reverse
+DCF showed the price implied a long-run EBIT margin of about 50%, against 35% in the base case.
 
 ---
 
@@ -165,6 +167,7 @@ dcf-valuation-program/
 │   └── archive/           every earlier version, pp to mk8.3
 ├── comps/
 │   └── comps.py           trading comparables
+├── docs/images/          example chart shown in this README
 ├── outputs/               Excel exports (created when you export; not tracked)
 └── pyproject.toml, uv.lock, .python-version
 ```
