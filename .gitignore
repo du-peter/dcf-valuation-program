@@ -1,0 +1,12 @@
+# Python environment and caches (rebuilt by uv, never committed)
+.venv/
+__pycache__/
+*.pyc
+.ruff_cache/
+
+# macOS and Excel temp files
+.DS_Store
+~$*
+
+# Exports created when you choose to export
+outputs/

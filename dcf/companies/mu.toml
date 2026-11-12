@@ -1,0 +1,79 @@
+# MU settings for DCF mk9
+# AUTO-GENERATED on 2026-11-11 from the company's own history. NOT REVIEWED.
+# History used: 8 annual periods. Revenue growth 25.0% a year,
+# last-12-months EBIT margin 74.6%, average annual EBIT margin 21.1%.
+#
+# Every line is tagged:
+#   DATA        taken from the company's filings or price history. Check, rarely change.
+#   MARKET      market-wide input, same for every company. Update a few times a year.
+#   ASSUMPTION  a judgment. Review each one before trusting the output.
+#   SETTING     how the model runs. Usually leave as is.
+# Rebuild from fresh data: uv run dcf/dcf_engine.py mu rebuild
+
+ticker = "MU"
+auto_generated = true          # SETTING: set to false once you have reviewed the assumptions
+horizon_years = 10             # SETTING: years forecast before the terminal value
+midyear = true                 # SETTING: cash flows arrive mid-year on average
+primary_tv = "gordon"          # SETTING: "gordon" or "exit"; the other is shown as a cross-check
+fx_to_price_currency = 1.0     # SETTING: 1.0 when filings and share price are in the same currency
+
+[capital]
+risk_free = 0.0498               # MARKET: US 10-year Treasury yield
+equity_risk_premium = 0.0441     # MARKET: Damodaran implied ERP
+beta = 2.03                        # DATA: measured 2.55 (2y weekly vs SPY), Blume-adjusted to 2/3 x 2.55 + 1/3
+pre_tax_cost_of_debt = 0.06        # ASSUMPTION: matters only for companies with real debt
+tax_rate = 0.21                    # ASSUMPTION: US federal rate; replace with the company's effective rate
+
+[shares]
+sec_share_multiplier = 1           # SETTING: set to the split ratio if a split happened after the last filing
+
+[overrides]
+price = 0                          # SETTING: 0 = live price; enter a number to test another price
+
+[scenarios.bear]
+# Bear: growth 3 points below history, normal margin 25% below the historical average. RONIC = cost of equity, so growth adds no value.
+probability = 0.25                                  # ASSUMPTION
+revenue_bn = []                                     # SETTING: empty = start from last-12-months revenue
+growth_after = [0.22, 0.18, 0.14, 0.1, 0.06, 0.02]   # ASSUMPTION: 22.0% (from history) fading to terminal growth
+ebit_margin_early = [0.746]                     # DATA: last-12-months EBIT margin
+ebit_margin_terminal = 0.158                      # ASSUMPTION: normal-year margin (most important input)
+terminal_margin_year = 5                            # ASSUMPTION: year the normal margin is reached
+capex_pct_revenue = [0.2306, 0.1935, 0.1563, 0.1192, 0.0821]   # DATA then ASSUMPTION: last-12-months, fading to 1.15 x D&A
+jv_capex_pct_revenue = 0.0                          # SETTING: only for companies with a joint venture
+da_pct_revenue = 0.071                          # DATA: last-12-months D&A / revenue
+nwc_pct_revenue = 0.10                              # ASSUMPTION: working capital needed per $1 of new revenue
+terminal_growth = 0.02                              # ASSUMPTION: growth forever after year 10
+terminal_roic = 0.139                              # ASSUMPTION: return on new investment after year 10
+exit_multiple = 6.0                                # ASSUMPTION: EV/EBITDA at year 10 (cross-check)
+
+[scenarios.base]
+# Base: growth at its 3-year history, margin fades to the historical average.
+probability = 0.5                                  # ASSUMPTION
+revenue_bn = []                                     # SETTING: empty = start from last-12-months revenue
+growth_after = [0.25, 0.206, 0.162, 0.118, 0.074, 0.03]   # ASSUMPTION: 25.0% (from history) fading to terminal growth
+ebit_margin_early = [0.746]                     # DATA: last-12-months EBIT margin
+ebit_margin_terminal = 0.211                      # ASSUMPTION: normal-year margin (most important input)
+terminal_margin_year = 5                            # ASSUMPTION: year the normal margin is reached
+capex_pct_revenue = [0.2306, 0.1935, 0.1563, 0.1192, 0.0821]   # DATA then ASSUMPTION: last-12-months, fading to 1.15 x D&A
+jv_capex_pct_revenue = 0.0                          # SETTING: only for companies with a joint venture
+da_pct_revenue = 0.071                          # DATA: last-12-months D&A / revenue
+nwc_pct_revenue = 0.10                              # ASSUMPTION: working capital needed per $1 of new revenue
+terminal_growth = 0.03                              # ASSUMPTION: growth forever after year 10
+terminal_roic = 0.169                              # ASSUMPTION: return on new investment after year 10
+exit_multiple = 8.0                                # ASSUMPTION: EV/EBITDA at year 10 (cross-check)
+
+[scenarios.bull]
+# Bull: growth 3 points above history, normal margin 25% above the historical average.
+probability = 0.25                                  # ASSUMPTION
+revenue_bn = []                                     # SETTING: empty = start from last-12-months revenue
+growth_after = [0.28, 0.231, 0.182, 0.133, 0.084, 0.035]   # ASSUMPTION: 28.0% (from history) fading to terminal growth
+ebit_margin_early = [0.746]                     # DATA: last-12-months EBIT margin
+ebit_margin_terminal = 0.264                      # ASSUMPTION: normal-year margin (most important input)
+terminal_margin_year = 5                            # ASSUMPTION: year the normal margin is reached
+capex_pct_revenue = [0.2306, 0.1935, 0.1563, 0.1192, 0.0821]   # DATA then ASSUMPTION: last-12-months, fading to 1.15 x D&A
+jv_capex_pct_revenue = 0.0                          # SETTING: only for companies with a joint venture
+da_pct_revenue = 0.071                          # DATA: last-12-months D&A / revenue
+nwc_pct_revenue = 0.10                              # ASSUMPTION: working capital needed per $1 of new revenue
+terminal_growth = 0.035                              # ASSUMPTION: growth forever after year 10
+terminal_roic = 0.199                              # ASSUMPTION: return on new investment after year 10
+exit_multiple = 10.0                                # ASSUMPTION: EV/EBITDA at year 10 (cross-check)

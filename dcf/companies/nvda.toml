@@ -1,0 +1,97 @@
+# NVDA settings for DCF mk9
+# REVIEWED 2026-11-11. Sources at the bottom of this file.
+#
+# Every line is tagged:
+#   DATA        taken from the company's filings, guidance or price history.
+#   MARKET      market-wide input, same for every company.
+#   ASSUMPTION  a judgment. These move the answer; challenge them.
+#   SETTING     how the model runs.
+#
+# Anchors (fiscal year ends late January; FY27 = Feb 2026 to Jan 2027):
+#   FY26 revenue $215.9bn, GAAP operating income $130.4bn (60.4% margin).
+#   Q2 FY27 revenue $96.2bn, GAAP operating income $63.7bn (66.2% margin).
+#   Q3 FY27 guide $108bn +/- 2%. Street FY27 about $396bn to $410bn.
+#   CFO "preliminary expectation": FY28 revenue +70%, about $690bn to $700bn, supply-constrained.
+#   Consensus FY29 about $903bn (38 analysts, TIKR, Nov 2 2026).
+# Model year 1 = next 12 months (about Nov 2026 to Oct 2027), so it straddles FY27 Q4 and FY28.
+# Next earnings: Nov 17, 2026. Recheck year 1 and 2 revenue after that report.
+
+ticker = "NVDA"
+auto_generated = false         # SETTING: reviewed by hand, so "rebuild" will not overwrite it
+horizon_years = 10             # SETTING
+midyear = true                 # SETTING
+primary_tv = "gordon"          # SETTING
+fx_to_price_currency = 1.0     # SETTING
+
+[capital]
+risk_free = 0.0498             # MARKET: US 10-year Treasury, Nov 10 2026
+equity_risk_premium = 0.0441   # MARKET: Damodaran implied ERP, Nov 1 2026
+beta = 1.55                    # DATA: measured 1.83 (2y weekly vs SPY), Blume-adjusted to 2/3 x 1.83 + 1/3
+pre_tax_cost_of_debt = 0.05    # ASSUMPTION: small effect, debt is under 1% of capital
+tax_rate = 0.18                # DATA: company guides a 17% to 19% FY27 tax rate
+
+[shares]
+sec_share_multiplier = 1       # SETTING: no split since the last filing
+
+[overrides]
+price = 0                      # SETTING: 0 = live price
+
+# ---------------------------------------------------------------------------------
+# Scenarios. revenue_bn = model years 1 to 3; growth_after = years 4 to 10.
+# ---------------------------------------------------------------------------------
+
+[scenarios.bear]
+# AI data center spending pauses after 2027: the FY28 guide is missed, then revenue falls
+# as customers digest what they bought, and pricing power weakens.
+probability = 0.40                              # ASSUMPTION: raised after the Nov 2026 CEO news
+revenue_bn = [560, 520, 450]                    # ASSUMPTION: below the FY28 guide, then a 2-year decline
+growth_after = [0.04, 0.05, 0.05, 0.04, 0.035, 0.03, 0.03]   # ASSUMPTION
+ebit_margin_early = [0.64, 0.55, 0.45]          # ASSUMPTION: starts near today's 66%, falls with volume and price
+ebit_margin_terminal = 0.35                     # ASSUMPTION: normal-year margin, near pre-AI levels
+terminal_margin_year = 6                        # ASSUMPTION
+capex_pct_revenue = [0.025, 0.025, 0.02]        # ASSUMPTION: last-12-months about 2.5% of revenue
+jv_capex_pct_revenue = 0.0                      # SETTING: no joint venture
+da_pct_revenue = 0.012                          # DATA: last-12-months D&A / revenue
+nwc_pct_revenue = 0.10                          # ASSUMPTION: working capital per $1 of new revenue
+terminal_growth = 0.025                         # ASSUMPTION
+terminal_roic = 0.118                           # ASSUMPTION: about equal to WACC, so growth adds no value
+exit_multiple = 7.0                             # ASSUMPTION: EV/EBITDA for a no-growth-value chip company
+
+[scenarios.base]
+# The FY28 guide is roughly met; growth then slows to single digits as the build-out matures.
+# Margins drift down as competition (custom chips, AMD) and memory costs rise.
+probability = 0.50                              # ASSUMPTION
+revenue_bn = [600, 850, 950]                    # DATA then ASSUMPTION: Y1 straddles FY27 Q4 and FY28 (+70% guide); Y2 near FY29 consensus $903bn
+growth_after = [0.08, 0.07, 0.06, 0.05, 0.04, 0.035, 0.03]   # ASSUMPTION
+ebit_margin_early = [0.66, 0.64, 0.60]          # DATA then ASSUMPTION: Q2 FY27 GAAP 66.2%
+ebit_margin_terminal = 0.50                     # ASSUMPTION: below FY26 (60.4%), well above pre-AI
+terminal_margin_year = 8                        # ASSUMPTION
+capex_pct_revenue = [0.025, 0.025, 0.02]        # ASSUMPTION
+jv_capex_pct_revenue = 0.0                      # SETTING
+da_pct_revenue = 0.012                          # DATA
+nwc_pct_revenue = 0.10                          # ASSUMPTION
+terminal_growth = 0.03                          # ASSUMPTION
+terminal_roic = 0.25                            # ASSUMPTION: keeps a strong position (CUDA software, networking)
+exit_multiple = 10.0                            # ASSUMPTION: near what the Gordon method implies at this WACC
+
+[scenarios.bull]
+# Demand stays ahead of supply through FY29; Nvidia keeps most of its share and pricing.
+probability = 0.10                              # ASSUMPTION
+revenue_bn = [650, 1000, 1200]                  # ASSUMPTION: above the FY28 guide and FY29 consensus
+growth_after = [0.12, 0.10, 0.08, 0.07, 0.06, 0.05, 0.04]   # ASSUMPTION
+ebit_margin_early = [0.67, 0.66, 0.64]          # ASSUMPTION
+ebit_margin_terminal = 0.58                     # ASSUMPTION: close to FY26's 60.4%
+terminal_margin_year = 9                        # ASSUMPTION
+capex_pct_revenue = [0.025, 0.025, 0.02]        # ASSUMPTION
+jv_capex_pct_revenue = 0.0                      # SETTING
+da_pct_revenue = 0.012                          # DATA
+nwc_pct_revenue = 0.10                          # ASSUMPTION
+terminal_growth = 0.035                         # ASSUMPTION
+terminal_roic = 0.35                            # ASSUMPTION
+exit_multiple = 13.0                            # ASSUMPTION
+
+# Sources:
+#   NVIDIA FY26 results release, Feb 25 2026 (FY26 revenue, operating income, FY27 tax guide)
+#   NVIDIA Q2 FY27 results release, Aug 26 2026 (Q2 revenue, operating income, Q3 guide)
+#   CFO Colette Kress, Q2 FY27 call: FY28 revenue +70% preliminary expectation (CFO Dive, Fortune)
+#   TIKR, Nov 2 2026: consensus FY28 about $692bn, FY29 about $903bn
